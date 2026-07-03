@@ -81,10 +81,12 @@
   }
   header .eyebrow{position:relative; z-index:1}
   h1{
-    font-size:clamp(1.7rem,4.2vw,2.9rem); font-weight:600; line-height:1.32;
+    /* sized so the nowrap first phrase fits one line down to ~360px viewports */
+    font-size:clamp(1.35rem,3.4vw + .6rem,2.9rem); font-weight:600; line-height:1.32;
     margin:.35em 0 .4em; text-wrap:balance; max-width:21em; position:relative; z-index:1;
     letter-spacing:.005em;
   }
+  h1 .nowrap{white-space:nowrap}
   h1 mark{
     background:linear-gradient(transparent 62%, var(--accent-tint) 62%);
     color:var(--accent-deep); padding:0 .08em;
@@ -319,7 +321,7 @@
       <div class="wordmark">Paw<span>Map</span><small>หมาแมวจร</small></div>
     </div>
     <p class="eyebrow">Mockup แนวคิด + สรุปค่าใช้จ่าย · 2 ก.ค. 2026</p>
-    <h1>แผนที่รายงานจุดพบ<span style="white-space:nowrap">หมา–แมวจร</span> <mark>โดยคนในพื้นที่ เพื่อคนในพื้นที่</mark></h1>
+    <h1><span class="nowrap">แผนที่รายงานจุดพบหมา–แมวจร</span> <mark>โดยคนในพื้นที่ เพื่อคนในพื้นที่</mark></h1>
     <p class="lede">
       ใครเจอหมาหรือแมวจรก็ปักหมุดรายงานได้ใน 15 วินาที เหมือนรายงานอุบัติเหตุบน Google Maps —
       ทุกคนเห็นว่าจุดไหนมีสัตว์จรหนาแน่นแค่ไหน และแอดมินสรุปข้อมูลรายพื้นที่ส่งต่อเทศบาลได้ทันที
@@ -539,6 +541,31 @@
       *แปลงจาก USD โดยประมาณ (Apple $99/ปี · Google $25 ครั้งเดียว · Supabase $0–25/เดือน) อัตราจริงตามวันชำระ ·
       ที่ถูกขนาดนี้เพราะออกแบบมาให้ประหยัด: ไม่มีระบบรูปภาพ (ตัวกินพื้นที่หลัก), แผนที่ในแอปมือถือไม่มีค่า load,
       และไม่ต้องเช่าเซิร์ฟเวอร์แยก · <b>ค่าพัฒนาแอปตกลงกันแยกต่างหาก</b> — ตารางนี้คือค่าดูแลระบบรายเดือน/รายปีเท่านั้น
+    </p>
+
+    <h2 class="reveal" style="margin-top:56px">มองยาว 5 ปี (ผู้ใช้ 0–1,000 คน)</h2>
+    <p class="sub reveal">
+      ช่วงผู้ใช้ 0–1,000 คน ค่าใช้จ่าย<b>ไม่โตตามจำนวนคน</b> — แอปเก็บเฉพาะข้อมูลตัวอักษรขนาดจิ๋ว ไม่มีรูปภาพ
+      ยังอยู่ในแพ็กเกจฟรีของ Supabase สบาย ๆ (เพดานฟรี: ฐานข้อมูล 500 MB + ผู้ใช้ล็อกอิน 50,000 คน/เดือน)
+      เหลือรายจ่ายประจำจริงแค่บัญชี Apple ปีละครั้ง
+    </p>
+    <div class="cost-card reveal">
+    <div class="cost-wrap">
+    <table class="cost">
+      <tr><th>ปีที่</th><th>Apple (รายปี)</th><th>Google Play</th><th>Supabase</th><th style="text-align:right">รวมปีนั้น</th><th style="text-align:right">สะสม</th></tr>
+      <tr><td>ปี 1</td><td>~3,600 บาท</td><td>~900 บาท (ครั้งเดียว)</td><td>0 บาท</td><td class="num">~4,500 บาท</td><td class="num">~4,500 บาท</td></tr>
+      <tr><td>ปี 2</td><td>~3,600 บาท</td><td>—</td><td>0 บาท</td><td class="num">~3,600 บาท</td><td class="num">~8,100 บาท</td></tr>
+      <tr><td>ปี 3</td><td>~3,600 บาท</td><td>—</td><td>0 บาท</td><td class="num">~3,600 บาท</td><td class="num">~11,700 บาท</td></tr>
+      <tr><td>ปี 4</td><td>~3,600 บาท</td><td>—</td><td>0 บาท</td><td class="num">~3,600 บาท</td><td class="num">~15,300 บาท</td></tr>
+      <tr><td>ปี 5</td><td>~3,600 บาท</td><td>—</td><td>0 บาท</td><td class="num">~3,600 บาท</td><td class="num">~18,900 บาท</td></tr>
+      <tr class="total"><td colspan="4">รวม 5 ปี ที่ผู้ใช้ 0–1,000 คน (เฉลี่ย ~315 บาท/เดือน)</td><td class="num" colspan="2">~18,900 บาท</td></tr>
+    </table>
+    </div>
+    </div>
+    <p class="cost-note reveal">
+      ถ้าแอปดังเกินคาด — ผู้ใช้โตเป็น<b>หลักหมื่นคน</b>หรือข้อมูลชนเพดานฟรี ค่อยอัปเกรด Supabase Pro
+      (~900 บาท/เดือน) ตอนนั้น = ปีละ ~14,400 บาท ซึ่งเป็น "ปัญหาที่ดี" เพราะแปลว่ามีคนใช้จริงจำนวนมาก ·
+      ตัวเลขทุกช่องแปลงจาก USD โดยประมาณ อัตราจริงตามวันชำระ
     </p>
   </div>
 </section>
