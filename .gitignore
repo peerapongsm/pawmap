@@ -1,0 +1,14 @@
+# session/agent files — never commit
+memory.md
+.superpowers/
+
+# dependencies & build output (future app code)
+node_modules/
+.expo/
+dist/
+android/
+ios/
+
+# env & secrets
+.env
+.env.*

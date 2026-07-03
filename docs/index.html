@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PawMap · หมาแมวจร — Mockup & ค่าใช้จ่าย</title>
+<meta name="description" content="แผนที่รายงานจุดพบหมา–แมวจร โดยคนในพื้นที่ เพื่อคนในพื้นที่ — mockup แนวคิด + สรุปค่าใช้จ่าย">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Mitr:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#2B2620; --ink-soft:#5A5248; --paper:#FBF7F0; --cream:#F6EFE3;
+    --accent:#E8722A; --accent-deep:#C55A18; --accent-tint:#FCEEE2;
+    --cat:#2A8E8B; --cat-tint:#E3F1F0; --muted:#8A8177; --line:#E9E1D4;
+    --map:#ECE9E1; --danger:#C4402F; --card:#FFFFFF;
+    --font-display:'Mitr','Anuphan',sans-serif;
+    --font-body:'Anuphan','Leelawadee UI','Noto Sans Thai',sans-serif;
+    font-size:16px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--font-body); line-height:1.7;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  /* atmosphere: soft washes + grain */
+  body::before{
+    content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
+    background:
+      radial-gradient(60rem 34rem at 85% -6%, rgba(232,114,42,.09), transparent 60%),
+      radial-gradient(46rem 30rem at -10% 34%, rgba(42,142,139,.08), transparent 60%),
+      radial-gradient(50rem 36rem at 70% 105%, rgba(232,114,42,.06), transparent 60%);
+  }
+  body::after{
+    content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.5;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .035 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap{max-width:1060px; margin:0 auto; padding:0 24px; position:relative}
+  .eyebrow{
+    font-size:.72rem; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--accent-deep); font-weight:700; display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:""; width:26px; height:2px; background:var(--accent); border-radius:2px}
+  h1,h2,.wordmark{font-family:var(--font-display)}
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s cubic-bezier(.22,.8,.3,1)}
+  .reveal.in{opacity:1; transform:none}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .reveal{opacity:1; transform:none; transition:none}
+    .paw-trail i, .hero-badge{animation:none !important}
+  }
+  /* ---------- hero ---------- */
+  header{padding:76px 0 56px; border-bottom:1px solid var(--line); position:relative; overflow:hidden}
+  .paw-trail{position:absolute; inset:0; pointer-events:none; z-index:0}
+  .paw-trail i{
+    position:absolute; width:17px; height:17px; opacity:0;
+    background:currentColor; color:rgba(232,114,42,.28);
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 46'%3E%3Cellipse cx='23' cy='31' rx='11' ry='9'/%3E%3Cellipse cx='7' cy='16' rx='4.4' ry='5.4'/%3E%3Cellipse cx='18' cy='10' rx='4.4' ry='5.8'/%3E%3Cellipse cx='29' cy='10' rx='4.4' ry='5.8'/%3E%3Cellipse cx='39' cy='16' rx='4.4' ry='5.4'/%3E%3C/svg%3E") center/contain no-repeat;
+            mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 46'%3E%3Cellipse cx='23' cy='31' rx='11' ry='9'/%3E%3Cellipse cx='7' cy='16' rx='4.4' ry='5.4'/%3E%3Cellipse cx='18' cy='10' rx='4.4' ry='5.8'/%3E%3Cellipse cx='29' cy='10' rx='4.4' ry='5.8'/%3E%3Cellipse cx='39' cy='16' rx='4.4' ry='5.4'/%3E%3C/svg%3E") center/contain no-repeat;
+    animation:pawstep .8s ease forwards;
+  }
+  .paw-trail i:nth-child(even){color:rgba(42,142,139,.26)}
+  @keyframes pawstep{from{opacity:0; transform:scale(.4) rotate(var(--r,0deg))} to{opacity:1; transform:scale(1) rotate(var(--r,0deg))}}
+  .brand{display:flex; align-items:center; gap:14px; margin-bottom:22px; position:relative; z-index:1}
+  .paw-logo{
+    width:52px; height:52px; flex:none; border-radius:16px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 20px rgba(197,90,24,.30), inset 0 1px 0 rgba(255,255,255,.25);
+  }
+  .paw-logo svg{width:30px; height:30px; fill:#fff}
+  .wordmark{font-size:1.75rem; font-weight:600; letter-spacing:.01em; line-height:1.2}
+  .wordmark span{color:var(--accent)}
+  .wordmark small{
+    display:block; font-family:var(--font-body); font-weight:600;
+    font-size:.8rem; color:var(--muted); letter-spacing:.06em;
+  }
+  header .eyebrow{position:relative; z-index:1}
+  h1{
+    font-size:clamp(1.7rem,4.2vw,2.9rem); font-weight:600; line-height:1.32;
+    margin:.35em 0 .4em; text-wrap:balance; max-width:21em; position:relative; z-index:1;
+    letter-spacing:.005em;
+  }
+  h1 mark{
+    background:linear-gradient(transparent 62%, var(--accent-tint) 62%);
+    color:var(--accent-deep); padding:0 .08em;
+  }
+  .lede{max-width:37em; color:var(--ink-soft); margin:0; font-size:1.06rem; position:relative; z-index:1}
+  .hero-badges{display:flex; gap:10px; flex-wrap:wrap; margin-top:26px; position:relative; z-index:1}
+  .hero-badge{
+    background:var(--card); border:1px solid var(--line); border-radius:999px;
+    padding:7px 16px; font-size:.85rem; font-weight:600; color:var(--ink-soft);
+    box-shadow:0 3px 10px rgba(43,38,32,.07); display:flex; align-items:center; gap:8px;
+  }
+  .hero-badge b{color:var(--accent-deep)}
+  /* ---------- sections ---------- */
+  section{padding:64px 0; border-bottom:1px solid var(--line)}
+  h2{font-size:clamp(1.35rem,2.6vw,1.7rem); font-weight:600; margin:.35em 0 .3em; text-wrap:balance}
+  .sub{color:var(--muted); max-width:40em; margin-top:0}
+  /* ---------- phones ---------- */
+  .phones{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(235px,1fr));
+    gap:34px 28px; margin-top:40px;
+  }
+  figure{margin:0; display:flex; flex-direction:column; gap:14px}
+  figcaption{font-size:.87rem; color:var(--muted); line-height:1.6; padding:0 6px}
+  figcaption b{
+    color:var(--ink); display:block; font-size:.95rem; font-weight:700;
+    margin-bottom:2px;
+  }
+  figcaption b::before{
+    content:attr(data-n); display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:50%; background:var(--ink); color:var(--paper);
+    font-size:.72rem; margin-right:8px; vertical-align:2px; font-family:var(--font-display);
+  }
+  .phone{
+    background:#1B1815; border-radius:36px; padding:9px; position:relative;
+    box-shadow:0 2px 4px rgba(43,38,32,.10), 0 18px 44px rgba(43,38,32,.20), 0 40px 80px -30px rgba(197,90,24,.18);
+    transition:transform .45s cubic-bezier(.22,.8,.3,1), box-shadow .45s ease;
+  }
+  figure:nth-child(odd) .phone{transform:rotate(-.7deg)}
+  figure:nth-child(even) .phone{transform:rotate(.7deg)}
+  figure:hover .phone{
+    transform:rotate(0) translateY(-8px);
+    box-shadow:0 2px 4px rgba(43,38,32,.10), 0 26px 56px rgba(43,38,32,.26), 0 52px 96px -30px rgba(197,90,24,.26);
+  }
+  .screen{
+    background:var(--card); border-radius:28px; overflow:hidden;
+    height:472px; position:relative; display:flex; flex-direction:column;
+    font-size:12.5px; line-height:1.45;
+  }
+  .notch{
+    position:absolute; top:7px; left:50%; transform:translateX(-50%);
+    width:74px; height:16px; background:#1B1815; border-radius:9px; z-index:9;
+  }
+  .mapbg{position:absolute; inset:0; background:var(--map)}
+  .mapbg svg{width:100%; height:100%; display:block}
+  .searchbar{
+    position:absolute; top:34px; left:12px; right:12px; z-index:5;
+    background:var(--card); border-radius:12px; padding:8px 12px;
+    box-shadow:0 3px 10px rgba(43,38,32,.14); color:var(--muted); font-size:12px;
+  }
+  .chiprow{position:absolute; top:76px; left:12px; right:12px; z-index:5; display:flex; gap:6px; flex-wrap:wrap}
+  .chip{
+    background:var(--card); border:1px solid var(--line); border-radius:999px;
+    padding:3px 10px; font-size:11px; color:var(--ink-soft); box-shadow:0 2px 5px rgba(43,38,32,.08);
+  }
+  .chip.on{background:var(--accent); border-color:var(--accent); color:#fff; font-weight:700}
+  .cluster{
+    position:absolute; z-index:4; display:flex; align-items:center; justify-content:center;
+    background:var(--accent); color:#fff; font-weight:700; border-radius:50%;
+    border:3px solid #fff; box-shadow:0 4px 10px rgba(43,38,32,.28);
+    font-family:var(--font-display);
+  }
+  .cluster.cat{background:var(--cat)}
+  .c-lg{width:52px; height:52px; font-size:15px}
+  .c-md{width:42px; height:42px; font-size:13px}
+  .c-sm{width:34px; height:34px; font-size:12px}
+  .fab{
+    position:absolute; right:14px; bottom:18px; z-index:6;
+    background:var(--accent); color:#fff; font-weight:700; font-size:13px;
+    border-radius:999px; padding:12px 18px; box-shadow:0 6px 16px rgba(197,90,24,.4);
+  }
+  .locate{
+    position:absolute; right:14px; bottom:72px; z-index:6; width:38px; height:38px;
+    background:var(--card); border-radius:50%; box-shadow:0 3px 9px rgba(43,38,32,.16);
+    display:flex; align-items:center; justify-content:center; color:var(--cat); font-size:15px;
+  }
+  .sheet{
+    margin-top:auto; background:var(--card); border-radius:18px 18px 0 0;
+    box-shadow:0 -6px 22px rgba(43,38,32,.14); padding:14px 14px 16px; z-index:5; position:relative;
+  }
+  .grab{width:36px; height:4px; border-radius:2px; background:var(--line); margin:0 auto 10px}
+  .sheet h4{margin:0 0 8px; font-size:14px; font-family:var(--font-display); font-weight:600}
+  .fieldlabel{font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:700; margin:10px 0 5px}
+  .segrow{display:flex; gap:6px; flex-wrap:wrap}
+  .seg{
+    border:1.5px solid var(--line); border-radius:10px; padding:6px 0; flex:1;
+    text-align:center; font-weight:600; color:var(--ink-soft); min-width:44px;
+  }
+  .seg.on{border-color:var(--accent); background:var(--accent-tint); color:var(--accent-deep)}
+  .tag{border:1.5px solid var(--line); border-radius:999px; padding:4px 10px; font-size:11px; color:var(--ink-soft)}
+  .tag.on{border-color:var(--danger); background:#F9E9E5; color:var(--danger); font-weight:700}
+  .cta{
+    display:block; width:100%; border:0; margin-top:14px;
+    background:var(--accent); color:#fff; font-weight:700; font-size:14px;
+    border-radius:12px; padding:11px 0; text-align:center; font-family:inherit;
+  }
+  .minicta{
+    background:var(--accent-tint); color:var(--accent-deep); font-weight:700; font-size:11px;
+    border:0; border-radius:999px; padding:4px 12px; font-family:inherit; flex:none;
+  }
+  .stat-big{font-size:19px; font-weight:700; line-height:1.3; font-family:var(--font-display)}
+  .stat-sub{color:var(--muted); font-size:11.5px; margin-top:2px}
+  .timeline{margin-top:10px; display:flex; flex-direction:column; gap:8px}
+  .trow{display:flex; align-items:center; gap:8px; border-top:1px solid var(--line); padding-top:8px}
+  .dot{width:9px; height:9px; border-radius:50%; background:var(--accent); flex:none}
+  .dot.cat{background:var(--cat)}
+  .trow .t{flex:1}
+  .trow .t small{color:var(--muted); display:block; font-size:10.5px}
+  .appbar{background:var(--ink); color:#fff; padding:34px 14px 12px; font-weight:700; font-size:14px; font-family:var(--font-display)}
+  .appbar small{display:block; font-weight:400; font-size:10.5px; color:#C9C2B8; font-family:var(--font-body)}
+  .admin-body{padding:12px 14px; display:flex; flex-direction:column; gap:10px}
+  .field{border:1.5px solid var(--line); border-radius:10px; padding:8px 10px; color:var(--ink-soft); display:flex; justify-content:space-between}
+  .field b{color:var(--ink)}
+  table.mini{width:100%; border-collapse:collapse; font-size:11px}
+  table.mini th{
+    text-align:left; color:var(--muted); font-weight:700; font-size:9.5px;
+    letter-spacing:.1em; text-transform:uppercase; padding:5px 6px; border-bottom:1px solid var(--line);
+  }
+  table.mini td{padding:5px 6px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums}
+  /* ---------- steps ---------- */
+  .steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px; margin-top:32px; counter-reset:step}
+  .step{
+    background:var(--card); border:1px solid var(--line); border-radius:18px; padding:24px;
+    position:relative; overflow:hidden;
+    box-shadow:0 2px 6px rgba(43,38,32,.05);
+    transition:transform .35s cubic-bezier(.22,.8,.3,1), box-shadow .35s ease;
+  }
+  .step:hover{transform:translateY(-4px); box-shadow:0 12px 28px rgba(43,38,32,.12)}
+  .step::after{
+    counter-increment:step; content:counter(step);
+    position:absolute; right:-6px; bottom:-26px; font-family:var(--font-display);
+    font-size:6rem; font-weight:700; line-height:1; color:var(--accent); opacity:.08;
+    pointer-events:none;
+  }
+  .step .n{
+    width:36px; height:36px; border-radius:12px; background:var(--accent-tint); color:var(--accent-deep);
+    display:flex; align-items:center; justify-content:center; font-weight:600;
+    margin-bottom:12px; font-family:var(--font-display); font-size:1rem;
+  }
+  .step b{display:block; margin-bottom:4px; font-family:var(--font-display); font-weight:600; font-size:1.02rem}
+  .step p{margin:0; color:var(--ink-soft); font-size:.92rem}
+  /* ---------- honesty ---------- */
+  .honest{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px 28px; margin-top:28px; padding:0; list-style:none}
+  .honest li{
+    padding:18px 20px 18px 52px; position:relative; color:var(--ink-soft); font-size:.95rem;
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    box-shadow:0 2px 6px rgba(43,38,32,.05);
+  }
+  .honest li::before{
+    content:"✓"; position:absolute; left:18px; top:18px; width:22px; height:22px;
+    border-radius:50%; background:var(--cat-tint); color:var(--cat);
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem;
+  }
+  .honest li b{color:var(--ink); display:block; font-family:var(--font-display); font-weight:600; margin-bottom:2px}
+  /* ---------- cost ---------- */
+  .cost-card{
+    margin-top:30px; background:var(--card); border:1px solid var(--line); border-radius:20px;
+    box-shadow:0 4px 14px rgba(43,38,32,.07); overflow:hidden;
+  }
+  .cost-wrap{overflow-x:auto}
+  table.cost{width:100%; border-collapse:collapse; min-width:560px}
+  table.cost th{
+    text-align:left; font-size:.7rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--muted); padding:16px 18px 12px; border-bottom:2px solid var(--ink); background:var(--cream);
+  }
+  table.cost td{padding:14px 18px; border-bottom:1px solid var(--line); vertical-align:top}
+  table.cost td.num{
+    text-align:right; font-variant-numeric:tabular-nums; font-weight:700; white-space:nowrap;
+    font-family:var(--font-display);
+  }
+  table.cost tr.total td{
+    border-bottom:0; background:var(--accent-tint); font-weight:700;
+    border-top:2px solid var(--accent); font-size:1.02rem;
+  }
+  table.cost tr.total td.num{color:var(--accent-deep); font-size:1.1rem}
+  .cost-note{font-size:.85rem; color:var(--muted); margin-top:16px; max-width:44em}
+  .pill{
+    display:inline-block; background:var(--cat-tint); color:var(--cat); font-weight:700;
+    font-size:.72rem; border-radius:999px; padding:2px 10px; letter-spacing:.04em;
+  }
+  .pill.warn{background:var(--accent-tint); color:var(--accent-deep)}
+  /* ---------- footer ---------- */
+  footer{padding:56px 0 84px}
+  .next-flow{display:flex; flex-wrap:wrap; gap:10px; margin:22px 0 26px; padding:0; list-style:none}
+  .next-flow li{
+    background:var(--card); border:1px solid var(--line); border-radius:999px;
+    padding:8px 18px; font-size:.88rem; font-weight:600; color:var(--ink-soft);
+    display:flex; align-items:center; gap:10px; box-shadow:0 2px 6px rgba(43,38,32,.06);
+  }
+  .next-flow li::before{
+    content:attr(data-n); width:20px; height:20px; border-radius:50%;
+    background:var(--ink); color:var(--paper); font-size:.68rem; font-weight:700;
+    display:flex; align-items:center; justify-content:center; font-family:var(--font-display);
+  }
+  footer p{color:var(--muted); font-size:.9rem; max-width:44em}
+  .sig{
+    margin-top:34px; padding-top:22px; border-top:1px solid var(--line);
+    display:flex; align-items:center; gap:12px; color:var(--muted); font-size:.85rem;
+  }
+  .sig .paw-logo{width:34px; height:34px; border-radius:10px}
+  .sig .paw-logo svg{width:19px; height:19px}
+  @media (max-width:520px){ header{padding-top:52px} .screen{height:452px} section{padding:48px 0} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="paw-trail" aria-hidden="true">
+    <i style="left:64%; top:12%; --r:38deg;  animation-delay:.15s"></i>
+    <i style="left:70%; top:22%; --r:44deg;  animation-delay:.4s"></i>
+    <i style="left:75%; top:15%; --r:50deg;  animation-delay:.65s"></i>
+    <i style="left:81%; top:26%; --r:56deg;  animation-delay:.9s"></i>
+    <i style="left:86%; top:19%; --r:60deg;  animation-delay:1.15s"></i>
+    <i style="left:92%; top:31%; --r:66deg;  animation-delay:1.4s"></i>
+    <i style="left:90%; top:62%; --r:150deg; animation-delay:1.8s"></i>
+    <i style="left:84%; top:72%; --r:158deg; animation-delay:2.05s"></i>
+  </div>
+  <div class="wrap">
+    <div class="brand">
+      <div class="paw-logo" aria-hidden="true">
+        <svg viewBox="0 0 46 46"><ellipse cx="23" cy="31" rx="11" ry="9"/><ellipse cx="7" cy="16" rx="4.4" ry="5.4"/><ellipse cx="18" cy="10" rx="4.4" ry="5.8"/><ellipse cx="29" cy="10" rx="4.4" ry="5.8"/><ellipse cx="39" cy="16" rx="4.4" ry="5.4"/></svg>
+      </div>
+      <div class="wordmark">Paw<span>Map</span><small>หมาแมวจร</small></div>
+    </div>
+    <p class="eyebrow">Mockup แนวคิด + สรุปค่าใช้จ่าย · 2 ก.ค. 2026</p>
+    <h1>แผนที่รายงานจุดพบหมา–แมวจร <mark>โดยคนในพื้นที่ เพื่อคนในพื้นที่</mark></h1>
+    <p class="lede">
+      ใครเจอหมาหรือแมวจรก็ปักหมุดรายงานได้ใน 15 วินาที เหมือนรายงานอุบัติเหตุบน Google Maps —
+      ทุกคนเห็นว่าจุดไหนมีสัตว์จรหนาแน่นแค่ไหน และแอดมินสรุปข้อมูลรายพื้นที่ส่งต่อเทศบาลได้ทันที
+      ชื่อ "PawMap" เป็นชื่อชั่วคราว เปลี่ยนได้ทุกเมื่อ
+    </p>
+    <div class="hero-badges">
+      <span class="hero-badge">รายงานเสร็จใน <b>15 วินาที</b></span>
+      <span class="hero-badge">เปิดดูฟรี <b>ไม่ต้องสมัคร</b></span>
+      <span class="hero-badge">ค่าดูแลเริ่มต้น <b>เกือบศูนย์</b></span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow reveal">หน้าตาแอป</p>
+    <h2 class="reveal">4 จอหลัก</h2>
+    <p class="sub reveal">Mockup แนวคิดเพื่อให้เห็นภาพรวม — ดีไซน์จริงจะเก็บรายละเอียดอีกรอบก่อนพัฒนา</p>
+
+    <div class="phones">
+
+      <!-- 1 · MAP -->
+      <figure class="reveal">
+        <div class="phone"><div class="screen">
+          <div class="notch"></div>
+          <div class="mapbg">
+            <svg viewBox="0 0 240 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <rect width="240" height="480" fill="#ECE9E1"/>
+              <path d="M0 96 H240 M0 210 H240 M0 330 H240 M0 420 H240" stroke="#FFFFFF" stroke-width="10"/>
+              <path d="M60 0 V480 M150 0 V480" stroke="#FFFFFF" stroke-width="8"/>
+              <path d="M195 0 L240 60 V150 L200 210" stroke="#FFFFFF" stroke-width="6" fill="none"/>
+              <rect x="160" y="230" width="80" height="80" rx="10" fill="#D9E6D4"/>
+              <path d="M0 440 Q80 420 240 452 L240 480 L0 480 Z" fill="#CFE0E4"/>
+            </svg>
+          </div>
+          <div class="searchbar">🔍 ค้นหาพื้นที่…</div>
+          <div class="chiprow">
+            <span class="chip on">ทั้งหมด</span><span class="chip">หมา</span>
+            <span class="chip">แมว</span><span class="chip">30 วัน</span>
+          </div>
+          <div class="cluster c-lg" style="left:78px; top:150px">23</div>
+          <div class="cluster c-md" style="left:28px; top:262px">7</div>
+          <div class="cluster c-sm cat" style="left:172px; top:196px">5</div>
+          <div class="cluster c-md" style="left:132px; top:352px">12</div>
+          <div class="cluster c-sm cat" style="left:66px; top:398px">3</div>
+          <div class="locate">◎</div>
+          <div class="fab">＋ รายงาน</div>
+        </div></div>
+        <figcaption><b data-n="1">แผนที่รวม</b>
+          จุดสีส้ม = หมา, สีเขียวน้ำทะเล = แมว ตัวเลข = จำนวนรายงาน
+          กรองตามชนิด/ช่วงเวลาได้ ซูมใกล้จะเห็นเป็นหมุดรายจุด · เปิดดูได้โดยไม่ต้องล็อกอิน</figcaption>
+      </figure>
+
+      <!-- 2 · REPORT -->
+      <figure class="reveal">
+        <div class="phone"><div class="screen">
+          <div class="notch"></div>
+          <div class="mapbg">
+            <svg viewBox="0 0 240 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <rect width="240" height="480" fill="#ECE9E1"/>
+              <path d="M0 80 H240 M0 170 H240" stroke="#FFFFFF" stroke-width="10"/>
+              <path d="M110 0 V220" stroke="#FFFFFF" stroke-width="8"/>
+              <circle cx="120" cy="118" r="46" fill="#E8722A" opacity=".14"/>
+              <circle cx="120" cy="118" r="45" fill="none" stroke="#E8722A" stroke-width="1.5" stroke-dasharray="4 4"/>
+            </svg>
+          </div>
+          <div style="position:absolute; left:112px; top:96px; font-size:26px; z-index:4">📍</div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <h4>รายงานพบสัตว์จร</h4>
+            <div class="fieldlabel">ชนิด</div>
+            <div class="segrow"><div class="seg on">🐕 หมา</div><div class="seg">🐈 แมว</div></div>
+            <div class="fieldlabel">จำนวนโดยประมาณ</div>
+            <div class="segrow"><div class="seg">1</div><div class="seg on">2–5</div><div class="seg">6–10</div><div class="seg">10+</div></div>
+            <div class="fieldlabel">ลักษณะ (เลือกได้หลายข้อ)</div>
+            <div class="segrow">
+              <span class="tag">บาดเจ็บ</span><span class="tag on">ดุ / ไล่กัด</span>
+              <span class="tag">แม่ลูกอ่อน</span><span class="tag">มีปลอกคอ</span>
+            </div>
+            <button class="cta">ส่งรายงาน</button>
+          </div>
+        </div></div>
+        <figcaption><b data-n="2">ปักหมุดรายงาน</b>
+          หมุดขึ้นที่ตำแหน่งปัจจุบัน ลากปรับได้ในรัศมี 5 กม. (กันรายงานมั่วจากทางไกล)
+          ไม่ต้องพิมพ์ ไม่ต้องถ่ายรูป — จิ้ม 3 ครั้งเสร็จ ล็อกอินด้วย Google/Apple ครั้งแรกครั้งเดียว</figcaption>
+      </figure>
+
+      <!-- 3 · DETAIL -->
+      <figure class="reveal">
+        <div class="phone"><div class="screen">
+          <div class="notch"></div>
+          <div class="mapbg">
+            <svg viewBox="0 0 240 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <rect width="240" height="480" fill="#ECE9E1"/>
+              <path d="M0 70 H240 M0 150 H240" stroke="#FFFFFF" stroke-width="9"/>
+              <path d="M170 0 V200" stroke="#FFFFFF" stroke-width="7"/>
+            </svg>
+          </div>
+          <div class="cluster c-lg" style="left:96px; top:82px">14</div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <h4>บริเวณตลาดคลองเตย</h4>
+            <div class="stat-big">14 รายงาน ใน 30 วัน</div>
+            <div class="stat-sub">โดยผู้รายงาน 9 คน · ล่าสุด 2 ชม.ที่แล้ว</div>
+            <div class="segrow" style="margin-top:8px">
+              <span class="tag">หมา 11</span><span class="tag">แมว 3</span><span class="tag on">ดุ 2</span>
+            </div>
+            <div class="timeline">
+              <div class="trow"><span class="dot"></span>
+                <div class="t">หมา 2–5 ตัว · ดุ<small>2 ชม.ที่แล้ว</small></div>
+                <button class="minicta">ยังอยู่ ✓</button></div>
+              <div class="trow"><span class="dot cat"></span>
+                <div class="t">แมว 1 ตัว · แม่ลูกอ่อน<small>เมื่อวาน</small></div>
+                <button class="minicta">ยังอยู่ ✓</button></div>
+              <div class="trow"><span class="dot"></span>
+                <div class="t">หมา 6–10 ตัว<small>3 วันก่อน</small></div>
+                <button class="minicta">ยังอยู่ ✓</button></div>
+            </div>
+          </div>
+        </div></div>
+        <figcaption><b data-n="3">รายละเอียดจุด</b>
+          บอกตรง ๆ ว่า "กี่รายงาน โดยกี่คน ล่าสุดเมื่อไหร่" — ไม่เคลมจำนวนตัวสัตว์เกินจริง
+          ปุ่ม "ยังอยู่" ให้คนแถวนั้นยืนยันซ้ำได้แตะเดียว ข้อมูลเลยสดเสมอ รายงานเก่าจะจางหายไปเอง</figcaption>
+      </figure>
+
+      <!-- 4 · ADMIN -->
+      <figure class="reveal">
+        <div class="phone"><div class="screen">
+          <div class="notch"></div>
+          <div class="appbar">โหมดแอดมิน <small>เห็นเฉพาะบัญชีผู้ดูแล</small></div>
+          <div class="admin-body">
+            <div class="fieldlabel" style="margin-top:0">สรุปข้อมูลส่งเทศบาล</div>
+            <div class="field">พื้นที่ <b>เขตคลองเตย</b></div>
+            <div class="field">ช่วงเวลา <b>1–30 มิ.ย. 2026</b></div>
+            <table class="mini">
+              <tr><th>ตำบล/แขวง</th><th>รายงาน</th><th>ผู้รายงาน</th></tr>
+              <tr><td>คลองเตย</td><td>41</td><td>18</td></tr>
+              <tr><td>คลองตัน</td><td>17</td><td>9</td></tr>
+              <tr><td>พระโขนง</td><td>12</td><td>7</td></tr>
+            </table>
+            <button class="cta" style="margin-top:6px">ดาวน์โหลด CSV</button>
+            <div class="fieldlabel">คิวตรวจสอบ (ถูกแจ้งว่าไม่ถูกต้อง)</div>
+            <div class="field">หมา 10+ · สีลม <b style="color:var(--danger)">3 แจ้ง</b></div>
+          </div>
+        </div></div>
+        <figcaption><b data-n="4">โหมดแอดมิน (สำหรับคุณ)</b>
+          เลือกพื้นที่ + ช่วงเวลา แล้วดาวน์โหลดไฟล์ Excel/CSV พร้อมคอลัมน์ ตำบล–อำเภอ–จังหวัด
+          ส่งต่อเทศบาลได้เลย · จัดการรายงานที่ถูกแจ้ง และแบนผู้ใช้ที่ป่วนได้</figcaption>
+      </figure>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow reveal">การใช้งาน</p>
+    <h2 class="reveal">ใช้ยังไงใน 3 ขั้น</h2>
+    <div class="steps">
+      <div class="step reveal"><div class="n">1</div><b>เจอสัตว์จร → ปักหมุด</b>
+        <p>เปิดแอป จิ้มชนิด จำนวน ลักษณะ แล้วส่ง — เสร็จใน 15 วินาที ไม่ต้องพิมพ์อะไรเลย</p></div>
+      <div class="step reveal"><div class="n">2</div><b>ทุกคนเห็นภาพรวม</b>
+        <p>แผนที่แสดงจุดหนาแน่นทั่วประเทศ ใครจะหลบเส้นหมาดุ หรือไปช่วยแม่แมวลูกอ่อน ก็ดูได้ฟรีไม่ต้องสมัคร</p></div>
+      <div class="step reveal"><div class="n">3</div><b>ข้อมูลถึงมือเทศบาล</b>
+        <p>คุณกดสรุปรายพื้นที่เป็นไฟล์เดียว ส่งต่อเทศบาลหรือปศุสัตว์ ใช้วางแผนทำหมัน–ฉีดวัคซีนได้จริง</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow reveal">หลักการที่ตั้งใจ</p>
+    <h2 class="reveal">ออกแบบให้น่าเชื่อถือ + ปลอดภัย</h2>
+    <ul class="honest">
+      <li class="reveal"><b>ไม่โกหกตัวเลข</b> แสดง "จำนวนรายงาน + จำนวนคนรายงาน" ไม่เคลมว่ารู้จำนวนสัตว์จริง เพราะสัตว์ย้ายที่และคนหลายคนอาจเห็นตัวเดียวกัน</li>
+      <li class="reveal"><b>รายงานได้เฉพาะใกล้ตัว</b> ปักหมุดได้ในรัศมี 5 กม. จากตำแหน่งจริง ระบบตรวจซ้ำฝั่งเซิร์ฟเวอร์ กันการป่วนจากทางไกล</li>
+      <li class="reveal"><b>ไม่เปิดเผยตัวผู้รายงาน</b> ไม่มีชื่อ ไม่มีโปรไฟล์สาธารณะ ตำแหน่งตัวผู้ใช้ใช้ตรวจสอบแล้วทิ้งทันที ไม่เก็บ</li>
+      <li class="reveal"><b>กันสแปมหลายชั้น</b> จำกัดจำนวนรายงานต่อวัน มีปุ่มแจ้งรายงานผิด และแอดมินลบ/แบนได้จากในแอป</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow reveal">ค่าใช้จ่าย</p>
+    <h2 class="reveal">ค่าดูแลระบบ: เริ่มต้นเกือบศูนย์</h2>
+    <p class="sub reveal">ตัวเลขเป็นค่าบริการของแพลตฟอร์มภายนอกที่จ่ายตรง ไม่ผ่านคนกลาง — แนะนำให้สมัครทุกบัญชีในชื่อของคุณเอง แอปจะเป็นทรัพย์สินของคุณ 100%</p>
+
+    <div class="cost-card reveal">
+    <div class="cost-wrap">
+    <table class="cost">
+      <tr><th>รายการ</th><th>จ่ายให้ใคร</th><th>ความถี่</th><th style="text-align:right">ค่าใช้จ่าย*</th></tr>
+      <tr>
+        <td>บัญชีนักพัฒนา Apple <span class="pill warn">จำเป็นสำหรับ iPhone</span></td>
+        <td>Apple</td><td>รายปี</td><td class="num">~3,600 บาท/ปี</td>
+      </tr>
+      <tr>
+        <td>บัญชีนักพัฒนา Google Play <span class="pill warn">จำเป็นสำหรับ Android</span></td>
+        <td>Google</td><td>ครั้งเดียว</td><td class="num">~900 บาท</td>
+      </tr>
+      <tr>
+        <td>ฐานข้อมูล + ระบบล็อกอิน (Supabase)<br>
+        <span class="pill">ฟรีจนกว่าผู้ใช้จะเยอะจริง</span></td>
+        <td>Supabase</td><td>รายเดือน</td><td class="num">0 → ~900 บาท/เดือน</td>
+      </tr>
+      <tr><td>แผนที่ (Google Maps / Apple Maps ในแอป)</td><td>—</td><td>—</td><td class="num">0 บาท</td></tr>
+      <tr><td>หน้าเว็บข้อกำหนดการใช้งาน + นโยบายความเป็นส่วนตัว</td><td>—</td><td>—</td><td class="num">0 บาท</td></tr>
+      <tr class="total">
+        <td colspan="3">รวมปีแรก (ช่วงเปิดตัว ผู้ใช้ยังไม่มาก)</td>
+        <td class="num">~4,500 บาท + 0 บาท/เดือน</td>
+      </tr>
+    </table>
+    </div>
+    </div>
+
+    <p class="cost-note reveal">
+      *แปลงจาก USD โดยประมาณ (Apple $99/ปี · Google $25 ครั้งเดียว · Supabase $0–25/เดือน) อัตราจริงตามวันชำระ ·
+      ที่ถูกขนาดนี้เพราะออกแบบมาให้ประหยัด: ไม่มีระบบรูปภาพ (ตัวกินพื้นที่หลัก), แผนที่ในแอปมือถือไม่มีค่า load,
+      และไม่ต้องเช่าเซิร์ฟเวอร์แยก · <b>ค่าพัฒนาแอปตกลงกันแยกต่างหาก</b> — ตารางนี้คือค่าดูแลระบบรายเดือน/รายปีเท่านั้น
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="eyebrow reveal">ขั้นถัดไป</p>
+    <ul class="next-flow reveal">
+      <li data-n="1">เคาะชื่อแอป + เมืองเริ่มต้นบนแผนที่</li>
+      <li data-n="2">สมัครบัญชี Apple / Google / Supabase ในชื่อคุณ</li>
+      <li data-n="3">เริ่มพัฒนา — ไม่มีเดดไลน์บีบ เน้นทำให้ดี</li>
+      <li data-n="4">ทดสอบจริงบนมือถือ</li>
+      <li data-n="5">ขึ้น App Store + Play Store</li>
+    </ul>
+    <p class="reveal">เอกสารนี้เป็นข้อเสนอแนวคิด — ทุกอย่างปรับได้ตามความต้องการ</p>
+    <div class="sig reveal">
+      <div class="paw-logo" aria-hidden="true">
+        <svg viewBox="0 0 46 46"><ellipse cx="23" cy="31" rx="11" ry="9"/><ellipse cx="7" cy="16" rx="4.4" ry="5.4"/><ellipse cx="18" cy="10" rx="4.4" ry="5.8"/><ellipse cx="29" cy="10" rx="4.4" ry="5.8"/><ellipse cx="39" cy="16" rx="4.4" ry="5.4"/></svg>
+      </div>
+      <div>Paw<b style="color:var(--accent)">Map</b> · หมาแมวจร — ชื่อชั่วคราว เปลี่ยนได้ทุกเมื่อ</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
