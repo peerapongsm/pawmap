@@ -44,12 +44,13 @@
   }
   .eyebrow::before{content:""; width:26px; height:2px; background:var(--accent); border-radius:2px}
   h1,h2,.wordmark{font-family:var(--font-display)}
-  /* ---------- reveal ---------- */
-  .reveal{opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s cubic-bezier(.22,.8,.3,1)}
-  .reveal.in{opacity:1; transform:none}
+  /* ---------- reveal (JS-gated: no JS = everything visible) ---------- */
+  .js .reveal{opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s cubic-bezier(.22,.8,.3,1)}
+  .js .reveal.in{opacity:1; transform:none}
+  @media print{.js .reveal{opacity:1; transform:none}}
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
-    .reveal{opacity:1; transform:none; transition:none}
+    .js .reveal{opacity:1; transform:none; transition:none}
     .paw-trail i, .hero-badge{animation:none !important}
   }
   /* ---------- hero ---------- */
@@ -318,7 +319,7 @@
       <div class="wordmark">Paw<span>Map</span><small>หมาแมวจร</small></div>
     </div>
     <p class="eyebrow">Mockup แนวคิด + สรุปค่าใช้จ่าย · 2 ก.ค. 2026</p>
-    <h1>แผนที่รายงานจุดพบหมา–แมวจร <mark>โดยคนในพื้นที่ เพื่อคนในพื้นที่</mark></h1>
+    <h1>แผนที่รายงานจุดพบ<span style="white-space:nowrap">หมา–แมวจร</span> <mark>โดยคนในพื้นที่ เพื่อคนในพื้นที่</mark></h1>
     <p class="lede">
       ใครเจอหมาหรือแมวจรก็ปักหมุดรายงานได้ใน 15 วินาที เหมือนรายงานอุบัติเหตุบน Google Maps —
       ทุกคนเห็นว่าจุดไหนมีสัตว์จรหนาแน่นแค่ไหน และแอดมินสรุปข้อมูลรายพื้นที่ส่งต่อเทศบาลได้ทันที
@@ -563,6 +564,7 @@
 </footer>
 
 <script>
+  document.documentElement.classList.add('js');
   const io = new IntersectionObserver((entries) => {
     for (const e of entries) {
       if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
